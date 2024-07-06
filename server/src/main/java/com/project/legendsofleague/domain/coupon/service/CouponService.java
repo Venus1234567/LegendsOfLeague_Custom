@@ -37,22 +37,12 @@ public class CouponService {
     private final AmountDiscountedPriceCondition amountDiscountedPriceCondition;
 
 
-    /**
-     * Coupon정보를 입력받아 생성하는 메서드
-     *
-     * @param couponCreateDto 쿠폰정보를 입력받은 DTO
-     */
     @Transactional
     public void createCoupon(CouponCreateDto couponCreateDto) {
         couponRepository.save(Coupon.toEntity(couponCreateDto));
     }
 
-    /**
-     * 회원이 등록가능한 쿠폰 리스트 조회하는 메서드
-     *
-     * @param memberId 로그인한 회원의 아이디
-     * @return
-     */
+
     public List<CouponResponseDto> getApplicableCoupons(Long memberId) {
         return couponRepository.queryApplicableCoupons(
                 memberId).stream()
@@ -78,7 +68,6 @@ public class CouponService {
             Integer quantity = dto.getQuantity();
             Item item = itemMap.get(dto.getItemId());
 
-            //쿠폰을 적용하지 않은 경우
             if (memberCoupon == null) {
                 if (!checkPriceWithoutCoupon(item, price, quantity)) {
                     return false;
@@ -97,12 +86,7 @@ public class CouponService {
         return true;
     }
 
-    /**
-     * couponType에 따라서 CouponValidator를 선택하는 메서드
-     *
-     * @param couponType
-     * @return
-     */
+
     private CouponValidator getCouponValidator(CouponType couponType) {
         return switch (couponType) {
             case CATEGORY_PERCENT_DISCOUNT ->

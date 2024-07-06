@@ -26,13 +26,7 @@ public class AfterPurchaseService {
     private final ItemStockFacade itemStockFacade;
     private final OrderService orderService;
 
-    /**
-     * 구매를 성공적으로 마치고 이후 해야할 작업을 처리하는 과정
-     *
-     * @param purchaseId
-     * @param code
-     * @return
-     */
+
     @Transactional
     public Boolean finishPurchase(Long purchaseId, String code) {
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(
@@ -52,23 +46,15 @@ public class AfterPurchaseService {
             purchase.getTotalPrice());
     }
 
-    /**
-     * 성공적으로 환불한 경우에 이후에 해야할 작업을 진행하는 과정
-     *
-     * @param purchase
-     */
+
     @Transactional
     public void refundPurchase(Purchase purchase) {
-        //상태 REFUND로 변경하기.
         purchase.updatePurchaseStatus(PurchaseStatus.REFUND);
 
-        //구매시 사용했던 쿠폰 복구하기.
         refundMemberCoupon(purchase);
 
-        //orderId를 넘기면 해당 order를 REFUND로 바꾸는 로직 수행
         purchase.getOrder().refundOrder();
 
-        //재고 롤백
         List<OrderItem> orderItemList = purchase.getOrder().getOrderItemList();
         itemStockFacade.increaseStock(
             toOrderItemStockDtoList(orderItemList)
@@ -80,15 +66,12 @@ public class AfterPurchaseService {
     public void handleFailPurchase(Purchase purchase) {
         Order order = purchase.getOrder();
 
-        //차감했던 재고 복구
         itemStockFacade.increaseStock(
             toOrderItemStockDtoList(order.getOrderItemList())
         );
 
-        //구매상태 CANCEL로 변경하기
         purchase.updatePurchaseStatus(PurchaseStatus.CANCEL);
 
-        //주문상태 CANCEL로 변경하기
         order.changeStatusToCancel();
     }
 

@@ -26,20 +26,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatController {
 
-    /**
-     * WebSocket 메시지 전송을 위한 템플릿
-     */
+
     private final SimpMessageSendingOperations template;
 
-    /**
-     * 채팅 관련 데이터처리 리포지러티
-     */
+
     private final ChatRepository repository;
 
     /**
      * 채팅 서버에 입장한 사용자의 정보와 이전 채팅 기록을 반환합니다.
      *
-     * @param member 회원 정보
      * @return EnterDTO(사용자명, 이전 채팅 리스트)
      */
     @GetMapping("/chat/enterUser")

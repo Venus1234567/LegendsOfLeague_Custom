@@ -13,13 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderItemResponseDto {
 
-    private Long id; //item의 id
+    private Long id;
 
     private String name;
 
     private Integer price;
 
-    private Integer count; //주문한 상품의 개수
+    private Integer count;
 
     private String category;
 

@@ -18,8 +18,6 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (BadCredentialsException exception) {
             log.error("비밀번호를 잘못 입력하셨습니다.");
-            System.out.println("비밀번호 오류");
-//            return "비밀번호 오류";
         }
     }
 }

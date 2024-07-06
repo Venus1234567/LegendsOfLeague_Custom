@@ -26,7 +26,6 @@ public class TeamInGameService {
     public void saveTeamInGame(List<Map<String, String>> matchSchedules) {
 
         for (Map<String, String> match : matchSchedules) {
-            //Team1 에 대한 경기 정보 저장
             String uniqueGame = match.get("MatchId");
             Game game = gameRepository.findByUniqueGame(uniqueGame);
 
@@ -37,7 +36,6 @@ public class TeamInGameService {
             blueTeam.setTeamAndGame(team1, game);
             teamInGameRepository.save(blueTeam);
 
-            //Team2 에 대한 경기 정보 저장
             String team2Score = match.get("Team2Score");
             Team team2 = teamRepository.findByTeamName(match.get("Team2"));
 

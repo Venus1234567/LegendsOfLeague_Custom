@@ -21,7 +21,6 @@ public class ReviewCommentController {
 
     private final ReviewCommentService reviewCommentService;
 
-    //리뷰 작성
     @PostMapping("/{gameId}")
     public String writeReviewComment(@CurrentMember Member member, @RequestBody ReviewCommentRequest reviewCommentRequest) {
         log.info("ReviewCommentController.writeReviewComment");

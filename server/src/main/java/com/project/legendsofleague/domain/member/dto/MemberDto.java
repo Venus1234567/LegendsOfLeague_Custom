@@ -11,7 +11,6 @@ public class MemberDto {
     private String name;
     private String username;
 
-    // 정적 팩토리 메서드
     public static MemberDto of(OAuth2Response oAuth2Response, String username){
         MemberDto memberDto = new MemberDto();
         memberDto.role = ROLE.ROLE_USER.toString();
@@ -21,7 +20,6 @@ public class MemberDto {
         return memberDto;
     }
 
-    // 정적 팩토리 메서드 2
     public static MemberDto of(String username, String nickname){
         MemberDto memberDto = new MemberDto();
         memberDto.username = username;

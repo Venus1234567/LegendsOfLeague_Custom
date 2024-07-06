@@ -23,7 +23,6 @@ public class CouponStockScheduler {
     @Scheduled(fixedDelay = 120000)
     @Transactional
     public void updateCouponStock() {
-        System.out.println("===================update coupon stock start!!===============");
         Map<Long, Long> memberCouponCountMap = memberCouponRedisRepository.getMemberCouponCounts();
         Set<Long> couponIdSet = memberCouponCountMap.keySet();
 
@@ -34,7 +33,6 @@ public class CouponStockScheduler {
         });
 
         memberCouponRedisRepository.deleteMemberCouponCount();
-        System.out.println("===================update coupon stock end!!===============");
     }
 
 }

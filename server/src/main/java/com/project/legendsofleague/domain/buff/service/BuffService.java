@@ -19,10 +19,8 @@ public class BuffService {
     private final BuffRepository buffRepository;
     private final ReviewCommentRepository  reviewCommentRepository;
 
-    //buff 등록
     @Transactional
     public void saveBuff(Member member, BuffRequestDto buffRequestDto) {
-        //TODO 예외처리
         ReviewComment reviewComment = reviewCommentRepository.findById(buffRequestDto.getReviewCommentId()).orElseThrow();
 
         Optional<Buff> findBuff = buffRepository.findByMemberAndReviewComment(member, reviewComment);

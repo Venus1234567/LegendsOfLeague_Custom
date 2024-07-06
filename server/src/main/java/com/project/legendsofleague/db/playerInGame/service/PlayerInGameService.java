@@ -68,7 +68,6 @@ public class PlayerInGameService {
                 }
             } else {
 
-                //Team1 저장
                 Team team1 = teamRepository.findByTeamName(String.valueOf(map.get("Team1")));
                 TeamInGame team1InGame = teamInGameRepository.findByUniqueGameAndTeam(matchId, team1);
                 LinkedHashSet<String> team1Roster = (LinkedHashSet<String>) map.get("Team1Players");
@@ -78,7 +77,6 @@ public class PlayerInGameService {
                     playerInGameRepository.save(entity);
                 }
 
-                //Team2 저장
                 Team team2 = teamRepository.findByTeamName(String.valueOf(map.get("Team2")));
                 TeamInGame team2InGame = teamInGameRepository.findByUniqueGameAndTeam(matchId, team2);
                 LinkedHashSet<String> team2Roster = (LinkedHashSet<String>) map.get("Team2Players");

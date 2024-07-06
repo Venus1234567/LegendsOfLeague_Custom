@@ -45,7 +45,6 @@ public class GameService {
         }
     }
 
-    //모든 게임 가져온 후 게임 일정 만들기
     public List<GameScheduleResponseDto> getGames() {
         List<GameScheduleResponseDto> list = new ArrayList<>();
         List<Game> games = gameRepository.findAll();
@@ -64,7 +63,6 @@ public class GameService {
         return list;
     }
 
-    //게임 출전 팀과 로스터 가져오기
     public GameResultResponseDto getTeamsAndRostersInGame(Long gameId) {
         List<TeamInGame> result = teamInGameRepository.findAllByGameId(gameId);
         GameResultResponseDto gameResultResponseDto = GameResultResponseDto.toDto(gameId);

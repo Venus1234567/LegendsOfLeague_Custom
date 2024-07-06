@@ -45,7 +45,6 @@ public class MemberCouponService {
                 throw GlobalExceptionFactory.getInstance(NotFoundInputValueException.class);
             });
 
-        //이미 등록한 쿠폰인지 체크하는 로직
         validateAlreadyRegisteredCoupon(coupon);
 
         Long memberCouponCount = memberCouponRedisRepository.increaseMemberCouponCount(couponId);
@@ -55,33 +54,21 @@ public class MemberCouponService {
         }
 
         try{
-            //MemberCoupon 엔티티 만들고 저장
             memberCouponRepository.save(MemberCoupon.toEntity(memberId, coupon));
         }catch (Exception e){
-            //MemberCoupon Entity 생성 및 저장에 실패한 경우 -> Redis의 쿠폰 생성량 차감
             memberCouponRedisRepository.decreaseMemberCouponCount(couponId);
             throw e;
         }
 
     }
 
-    /**
-     * 회원이 쿠폰을 등록할때 이미 등록한 회원인지 체크하는 메서드
-     *
-     * @param coupon
-     */
+
     private void validateAlreadyRegisteredCoupon(Coupon coupon) {
         memberCouponRepository.findByCouponId(coupon.getId()).ifPresent(memberCoupon -> {
             throw GlobalExceptionFactory.getInstance(AlreadyRegisteredCouponException.class);
         });
     }
 
-    /**
-     * 회원이 등록한 쿠폰의 전체 리스트 조회
-     *
-     * @param memberId
-     * @return
-     */
     public List<MemberCouponResponseDto> getMemberCoupons(Long memberId) {
         return memberCouponRepository.queryMemberCoupons(
                 memberId).stream()
@@ -89,42 +76,28 @@ public class MemberCouponService {
             .collect(Collectors.toList());
     }
 
-    /**
-     * 주문페이지에서 각 아이템별로 적용 가능한 쿠폰 리스트를 조회
-     *
-     * @param memberId
-     * @param orderId
-     * @param itemList
-     * @return <itemId, 사용가능한 쿠폰 리스트> 리턴
-     */
+
     public Map<Long, List<MemberCouponResponseDto>> getMemberCouponsByOrder(Long memberId,
         Long orderId,
         List<Item> itemList) {
-        //리턴해야할 <itemId, 사용가능한 쿠폰 리스트>
         Map<Long, List<MemberCouponResponseDto>> couponMap = new HashMap<>();
 
-        //<itemId, MemberCoupon 엔티티 리스트>
         Map<Long, List<MemberCoupon>> itemMemberCouponMap = new HashMap<>();
 
-        //<itemId, 아이템에 적용되는 쿠폰 리스트>
         Map<Long, List<MemberCoupon>> itemCouponMap = new HashMap<>();
 
-        //<itemCategory, 카테고리에 적용되는 쿠폰 리스트>
         Map<ItemCategory, List<MemberCoupon>> categoryCouponMap = new HashMap<>();
 
-        //조회한 쿠폰 리스트가 어떤 카테고리에 적용가능한지, 어떤 아이템에 적용 가능한지 체크하는 로직
         memberCouponRepository.queryMemberCouponsByOrder(memberId, orderId)
             .forEach(memberCoupon -> {
                 Coupon coupon = memberCoupon.getCoupon();
 
-                //아이템에 적용하는 쿠폰의 경우 아이템과 적용 아이템 같은지 체크
                 if (coupon.getCouponType() == CouponType.ITEM_PERCENT_DISCOUNT
                     || coupon.getCouponType() == CouponType.ITEM_AMOUNT_DISCOUNT) {
                     itemCouponMap.computeIfAbsent(coupon.getItem().getId(), k -> new ArrayList<>())
                         .add(memberCoupon);
                 }
 
-                //카테고리의 적용하는 쿠폰의 경우, 아이템의 카테고리와 쿠폰의 카테고리가 일치하는지 체크
                 if (coupon.getCouponType() == CouponType.CATEGORY_PERCENT_DISCOUNT
                     || coupon.getCouponType() == CouponType.CATEGORY_AMOUNT_DISCOUNT) {
                     categoryCouponMap.computeIfAbsent(coupon.getAppliedCategory(),
@@ -132,7 +105,6 @@ public class MemberCouponService {
                 }
             });
 
-        //각 아이템별로 적용 가능한 쿠폰 리스트 매핑하기.
         itemList.forEach(item -> {
             Long itemId = item.getId();
             ItemCategory category = item.getCategory();
@@ -149,7 +121,6 @@ public class MemberCouponService {
             }
         });
 
-        //DTO 변환
         itemMemberCouponMap.forEach((key, value) -> {
             couponMap.put(key, value.stream()
                 .map(MemberCouponResponseDto::new)
