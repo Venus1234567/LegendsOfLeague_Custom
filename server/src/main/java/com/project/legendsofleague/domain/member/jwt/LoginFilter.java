@@ -51,10 +51,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String username = loginDto.getUsername();
         String password = loginDto.getPassword();
 
-        System.out.println(username);
-
-//        List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ADMIN"));
-//
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
 
         return authenticationManager.authenticate(authToken);
@@ -62,7 +58,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-//        System.out.println("success");
 
         CustomMemberDetails customMemberDetails = (CustomMemberDetails) authResult.getPrincipal();
 
@@ -74,26 +69,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-//        String token = jwtUtil.createJwt(username, role, 60 * 60 * 1000L);
-
-//        String token = jwtUtil.createJwt(username, role, 30 * 10000L);
         String token = jwtUtil.createJwt(username, role, 30 * 60 * 1000L);
 
-        System.out.println("토큰 출력:" + token);
         ResponseCookie cookie = createCookieTemp("Authorization", token);
         response.addHeader("Set-Cookie", cookie.toString());
 
-//        response.addCookie(createCookie("Authorization", token));
-
-//        response.addHeader("Authorization", "Bearer " + token);
-
-//        response.addCookie(( createCookie("Authorization",  URLEncoder.encode("Bearer " + token), "UTF-8")));
-//          response.addCookie(createCookie("Authorization", URLEncoder.encode("Bearer " + token, StandardCharsets.UTF_8)));
-        // 로그인 완료시 프론트서버의 홈으로 리다이렉트
-//        response.sendRedirect("http://localhost:3000");
     }
 
-    // 쿠키 생성
     private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);

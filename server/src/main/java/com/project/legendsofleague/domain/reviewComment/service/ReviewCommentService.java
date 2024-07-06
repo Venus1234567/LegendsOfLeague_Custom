@@ -25,10 +25,8 @@ public class ReviewCommentService {
     private final ReviewCommentRepository reviewCommentRepository;
     private final GameRepository gameRepository;
 
-    //한줄평 저장
     @Transactional
     public void saveReviewComment(Member member, ReviewCommentRequest reviewCommentRequest) {
-        //TODO 예외 처리 추가
         Game game = gameRepository.findById(reviewCommentRequest.getGameId()).orElseThrow();
         ReviewComment reviewComment = ReviewComment.toEntity(reviewCommentRequest);
         reviewComment.setMemberAndGame(member, game);
@@ -40,7 +38,6 @@ public class ReviewCommentService {
         List<ReviewComment> allByGameId = reviewCommentRepository.findAllByGameId(gameId);
         int size = allByGameId.size();
         if (size < 5) {
-            //TODO 예외처리
             List<ReviewComment> reviewComments = reviewCommentRepository.findByGameIdAndIsDeleteFalse(gameId).orElseThrow();
             for (ReviewComment reviewComment : reviewComments) {
                 log.info("리뷰Id={}", reviewComment.getId());

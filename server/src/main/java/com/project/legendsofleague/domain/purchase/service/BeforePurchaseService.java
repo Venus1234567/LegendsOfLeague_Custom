@@ -65,27 +65,21 @@ public class BeforePurchaseService {
         Integer purchaseTotalPrice = purchaseStartRequestDto.getPurchaseTotalPrice();
         PurchaseType purchaseType = PurchaseType.valueOf(purchaseStartRequestDto.getProvider());
 
-        //전체 아이템 조회해서 Map으로 변환
         Map<Long, Item> itemMap = itemRepository.findAllById(
                 itemList.stream().map(ItemCouponAppliedDto::getItemId)
                     .collect(Collectors.toList()))
             .stream()
             .collect(Collectors.toMap(Item::getId, item -> item));
 
-        //쿠폰 사용 여부, 유효성 검증
         Map<Long, MemberCoupon> memberCouponMap = getMemberCouponMap(member.getId(), itemList);
 
-        //쿠폰의 유효성, 적용 여부, 적용 가격 검증
         if (!couponService.checkValidity(memberCouponMap, itemList, itemMap)) {
             throw GlobalExceptionFactory.getInstance(InvalidMemberCouponException.class);
         }
 
-        //총 가격 검증
         checkTotalPrice(itemList, purchaseTotalPrice);
 
-        /*
-        결제 진행
-         */
+
 
         //결제 이름 생성
         int quantity = itemList.stream().mapToInt(ItemCouponAppliedDto::getQuantity).sum();
@@ -117,13 +111,7 @@ public class BeforePurchaseService {
     }
 
 
-    /**
-     * 주문을 취소하는 로직.
-     *
-     * @param orderId
-     * @throws JsonProcessingException
-     * @Param member
-     */
+
     public void cancelPurchase(Member member, Long orderId) throws JsonProcessingException {
 
         Purchase purchase = purchaseRepository.queryPurchaseByOrderId(orderId)

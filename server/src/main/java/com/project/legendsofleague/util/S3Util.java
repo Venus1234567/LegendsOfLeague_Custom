@@ -25,7 +25,7 @@ public class S3Util {
   private String bucket;
 
 
-  public List<ItemImage> saveFiles(List<String> images) { //인코드된 문자열들
+  public List<ItemImage> saveFiles(List<String> images) {
     List<ItemImage> itemImages = new ArrayList<>();
     for (String image : images) {
       if (!image.isEmpty()) {
@@ -35,10 +35,10 @@ public class S3Util {
     return itemImages;
   }
 
-  public ItemImage saveFile(String image) { //인코드된 문자열
+  public ItemImage saveFile(String image) {
     String[] encodeImage = image.split(","); //data:image/jpeg;base64, 분리해줘야 함
     byte[] imageData = Base64.getDecoder().decode(encodeImage[1]);
-    String savedFileName = createStoreFileName(encodeImage[0]); //저장할 이름 생성
+    String savedFileName = createStoreFileName(encodeImage[0]);
     ObjectMetadata metadata = new ObjectMetadata();
     metadata.setContentLength(imageData.length);
     amazonS3.putObject(bucket, savedFileName, new ByteArrayInputStream(imageData),
@@ -47,7 +47,7 @@ public class S3Util {
   }
 
   private String createStoreFileName(String data) {
-    String ext = extractExt(data); //ext 추출하기
+    String ext = extractExt(data);
     String uuid = UUID.randomUUID().toString();
 
     return uuid + "." + ext;

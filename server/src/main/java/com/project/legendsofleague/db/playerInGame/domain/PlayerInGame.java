@@ -20,7 +20,6 @@ public class PlayerInGame {
     @Column(name = "player_in_game_id")
     private Long id;
 
-    //게임에 참여한 선수
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "player_id")
     private Player player;

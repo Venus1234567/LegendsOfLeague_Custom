@@ -40,7 +40,6 @@ public class OrderCleanupScheduler {
         LocalDateTime currentTime = LocalDateTime.now();
 
         LocalDateTime oneHourAgo = currentTime.minusHours(1);
-        //결제상태가 PENDING인 아이템들 재고수 롤백
         List<Purchase> purchaseList = purchaseRepository.queryPurchaseByPurchaseStatus(
             PurchaseStatus.PENDING);
 
@@ -51,11 +50,9 @@ public class OrderCleanupScheduler {
 
         itemStockFacade.increaseStock(orderItemStockDtoList);
 
-        //purchase CANCEL, PENDING 레코드 삭제
         purchaseRepository.deleteAllByPurchaseDateBeforeAndPurchaseStatusIn(oneHourAgo,
             List.of(PurchaseStatus.PENDING, PurchaseStatus.CANCEL));
 
-        // 현재 시간으로부터 1시간이 넘은 주문을 삭제하는 로직을 구현
         orderRepository.deleteByOrderDateBeforeAndOrderStatusEquals(oneHourAgo,
             OrderStatus.PENDING);
         log.info("=========================");

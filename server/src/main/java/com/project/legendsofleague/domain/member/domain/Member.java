@@ -21,50 +21,33 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-    // 회원 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     @Schema(name = "Member ID", example = "1")
     Long id;
 
-    // 회원 비밀번호
     @Schema(name = "Password", example = "password123")
     String password;
 
-    // 로그인용 아이디
-    // 스프링 시큐리티에서는 username, password를 통해 로그인을 하기 때문에 username이 중복되지 않게 unique 키로 설정한다.
     @Column(unique = true)
     @Schema(name = "Username", example = "exam")
     String username;
 
-    // 닉네임
     @Column(unique = true)
     @Schema(name = "Nickname", example = "venus")
     String nickname;
 
-    // 회원 이메일
     @Schema(name = "Email", example = "exam@naver.com")
     String email;
 
-    // 회원 타입(일반회원, 관리자)
     @Enumerated(EnumType.STRING)
     @Schema(name = "Role", example = "ROLE_USER")
     ROLE role;
 
-//    String role;
-
-    /*
-     *연관관계 매핑할 것들, ORDER, CART
-     *
-     **/
-
-
     public Member(Long id) {
         this.id = id;
     }
-
-    // 팩토리 메서드(테스트용)
     public static Member from(RegisterDto dto, BCryptPasswordEncoder bCryptPasswordEncoder) {
         Member member = new Member();
         member.username = dto.getUsername();
@@ -82,7 +65,6 @@ public class Member extends BaseEntity {
         return member;
     }
 
-    // 팩토리 메서드(테스트용2)
     public static Member with(String username, String password, String role) {
         Member member = new Member();
         member.username = username;

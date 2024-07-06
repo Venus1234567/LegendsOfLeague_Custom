@@ -25,7 +25,6 @@ public class Team {
     private String teamName;
     private String uniqueLine;
 
-    //현재 시즌에 등록된 팀의 로스터
     @OneToMany(mappedBy = "team")
     private List<Player> players = new ArrayList<>();
 

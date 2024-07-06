@@ -20,19 +20,16 @@ public class ItemStockFacade {
     public void decreaseStock(List<OrderItemStockDto> orderItemStockDtoList) {
         orderItemStockDtoList.sort(Comparator.comparing(dto -> dto.getItem().getId()));
         try{
-            // 모든 아이템에 대해 락 획득
             for (OrderItemStockDto orderItemStockDto : orderItemStockDtoList) {
                 Item item = orderItemStockDto.getItem();
                 itemLockRepository.getLock(item.getId().toString());
             }
 
-            // 재고 감소 로직 처리
             for (OrderItemStockDto orderItemStockDto : orderItemStockDtoList) {
                 Item item = orderItemStockDto.getItem();
                 item.removeStock(orderItemStockDto.getQuantity());
             }
         } finally {
-            // 작업 완료 후 모든 아이템에 대해 락 해제
             for (OrderItemStockDto orderItemStockDto : orderItemStockDtoList) {
                 Item item = orderItemStockDto.getItem();
                 itemLockRepository.releaseLock(item.getId().toString());
@@ -43,19 +40,16 @@ public class ItemStockFacade {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void increaseStock(List<OrderItemStockDto> orderItemStockDtoList) {
         try{
-            // 모든 아이템에 대해 락 획득
             for (OrderItemStockDto orderItemStockDto : orderItemStockDtoList) {
                 Item item = orderItemStockDto.getItem();
                 itemLockRepository.getLock(item.getId().toString());
             }
 
-            // 재고 감소 로직 처리
             for (OrderItemStockDto orderItemStockDto : orderItemStockDtoList) {
                 Item item = orderItemStockDto.getItem();
                 item.addStock(orderItemStockDto.getQuantity());
             }
         } finally {
-            // 작업 완료 후 모든 아이템에 대해 락 해제
             for (OrderItemStockDto orderItemStockDto : orderItemStockDtoList) {
                 Item item = orderItemStockDto.getItem();
                 itemLockRepository.releaseLock(item.getId().toString());

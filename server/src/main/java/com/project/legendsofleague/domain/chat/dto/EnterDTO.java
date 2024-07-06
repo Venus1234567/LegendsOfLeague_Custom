@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class EnterDTO {
 
-    private String username; // 사용자 이름
-    private List<ChatDto> previousChat; // 이전 채팅 기록
+    private String username;
+    private List<ChatDto> previousChat;
 
 }

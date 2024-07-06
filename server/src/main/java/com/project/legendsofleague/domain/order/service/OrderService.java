@@ -63,7 +63,7 @@ public class OrderService {
      * @return
      */
     @Transactional
-    public Long createOrder(OrderRequestDto orderRequestDto, Member member) { //멤버는 id 생성자 사용
+    public Long createOrder(OrderRequestDto orderRequestDto, Member member) {
 
         Item item = itemRepository.findById(orderRequestDto.getItemId())
             .orElseThrow(() -> new NotFoundException("유효하지 않은 아이템입니다."));
@@ -87,7 +87,6 @@ public class OrderService {
         List<CartItem> cartItems = cartItemService.getCartItemList(member.getId());
         List<Long> cartItemIds = cartItems.stream().map(CartItem::getId).toList();
 
-        //요청의 cartItemId가 유효한(존재하는) id인지 검증
         validateCartList(cartItemIds, cartItemRequestList);
 
         Map<Long, CartItem> cartItemMap = cartItems.stream()
@@ -133,15 +132,12 @@ public class OrderService {
 
         List<OrderItem> orderItems = orderItemService.getOrderItemList(orderId);
 
-        //유효하지 않은 order를 요청한 거였다면
         if (orderItems.isEmpty()) {
             throw new NotFoundException("유효하지 않은 주문입니다.");
         }
 
-        //Order의 주인
         Member OrderMember = orderItems.get(0).getOrder().getMember();
 
-        //Order의 주인과 현재 로그인한 유저가 같지 않을 때
         if (!OrderMember.getId().equals(member.getId())) {
             throw new RuntimeException("허용되지 않은 접근입니다.");
         }
@@ -153,11 +149,6 @@ public class OrderService {
             memberCouponService.getMemberCouponsByOrder(member.getId(), orderId, items));
     }
 
-    /**
-     * 결제가 성공이 된 주문에 한하여 환불 요청이 들어왔을 때 실행되는 메소드
-     *
-     * @param order
-     */
     @Transactional
     public void refundOrder(Member member, Order order) {
 
@@ -175,19 +166,10 @@ public class OrderService {
         }
     }
 
-
-    /**
-     * 사용자가 결제를 성공적으로 완료했을 때, purchaseService로부터 order 변수에 대한 변경 요청을 하는 메소드
-     *
-     * @param time
-     * @param orderId
-     * @param totalPrice
-     */
     @Transactional
     public boolean successPurchase(LocalDateTime time, Long orderId, Integer totalPrice) {
         List<OrderItem> orderItems = orderItemService.getOrderItemList(orderId);
 
-        //유효하지 않은 order를 요청한 거였다면 (이미 삭제된 order라면)
         if (orderItems.isEmpty()) {
             return false;
         }
@@ -203,12 +185,8 @@ public class OrderService {
     }
 
 
-    /**
-     * orderItem의 item의 재고에서 orderItme의 count 개수를 뺀 값이 0보다 큰 지 확인하는 메소드
-     *
-     * @param orderItems
-     * @return
-     */
+
+
     private boolean checkItemStock(List<OrderItem> orderItems) {
         for (OrderItem orderItem : orderItems) {
             Item item = orderItem.getItem();

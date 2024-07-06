@@ -39,21 +39,18 @@ public class InternalFilterExceptionHandler extends OncePerRequestFilter {
     }
 
     private void handleJwtException(HttpServletResponse response, ExpiredJwtException ex) throws IOException {
-        // You can decide to send back a specific JSON payload or message, for instance
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
         response.getWriter().write("{\"error\": \"JWT has expired. Please reauthenticate.\"}");
     }
 
     private void handleBadCredentialException(HttpServletResponse response, BadCredentialsException ex) throws IOException {
-        // You can decide to send back a specific JSON payload or message, for instance
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
         response.getWriter().write("{\"error\": \"JWT has expired. Please reauthenticate.\"}");
     }
 
     private void handleUsernameNotFoundException(HttpServletResponse response, InternalAuthenticationServiceException ex) throws IOException {
-        // You can decide to send back a specific JSON payload or message, for instance
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
         response.getWriter().write("{\"error\": \"JWT has expired. Please reauthenticate.\"}");
@@ -61,7 +58,6 @@ public class InternalFilterExceptionHandler extends OncePerRequestFilter {
 
 
     private void handleGenericException(HttpServletResponse response, Exception ex) throws IOException {
-        // You can decide to send back a specific JSON payload or message, for instance
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.setContentType("application/json");
         response.getWriter().write(String.format("{\"error\": \"An internal error occurred: %s\"}", ex.getMessage()));

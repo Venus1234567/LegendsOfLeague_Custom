@@ -31,7 +31,6 @@ public class Player {
 
     private String playerName;
 
-    //플레이어가 출전한 게임 목록
     @OneToMany(mappedBy = "player")
     private List<PlayerInGame> playedGames = new ArrayList<>();
 

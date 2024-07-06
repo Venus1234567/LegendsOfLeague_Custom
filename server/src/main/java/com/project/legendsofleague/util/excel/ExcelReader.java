@@ -15,7 +15,6 @@ import java.util.Map;
 @Slf4j
 public class ExcelReader {
 
-    //팀 이름 가져오기
     public List<Map<String, String>> readTeam(String filePath) throws Exception {
         List<Map<String, String>> teamData = new ArrayList<>();
         InputStream inputStream = new FileInputStream(filePath);
@@ -27,12 +26,10 @@ public class ExcelReader {
 
         Sheet sheet = workbook.getSheet("Team");
 
-        // 각 행 순회 (헤더를 건너뜀)
         for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
 
             Map<String, String> rowData = new HashMap<>();
-            // 각 열 순회
             for (String columnName : columnIndexMap.keySet()) {
                 int columnIndex = columnIndexMap.get(columnName);
                 Cell cell = row.getCell(columnIndex);
@@ -45,7 +42,6 @@ public class ExcelReader {
         return teamData;
     }
 
-    //로스터 가져오기
     public List<Map<String, String>> readPlayer(String filePath) throws Exception {
 
         Map<String, Integer> columnIndexMap = new HashMap<>();
@@ -61,12 +57,10 @@ public class ExcelReader {
 
         Sheet sheet = workbook.getSheet("Rosters");
 
-        // 각 행 순회 (헤더를 건너뜀)
         for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
 
             Map<String, String> rowData = new HashMap<>();
-            // 각 열 순회
             for (String columnName : columnIndexMap.keySet()) {
                 int columnIndex = columnIndexMap.get(columnName);
                 Cell cell = row.getCell(columnIndex);
@@ -81,7 +75,6 @@ public class ExcelReader {
         return rosters;
     }
 
-    //경기 일정 가져오기
     public List<Map<String, String>> readMatchSchedule(String filePath) throws Exception {
 
         Map<String, Integer> columnIndexMap = new HashMap<>();
@@ -102,12 +95,10 @@ public class ExcelReader {
 
         Sheet sheet = workbook.getSheet("MatchSchedule");
 
-        // 각 행 순회 (헤더를 건너뜀)
         for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
 
             Map<String, String> rowData = new HashMap<>();
-            // 각 열 순회
             for (String columnName : columnIndexMap.keySet()) {
                 int columnIndex = columnIndexMap.get(columnName);
                 Cell cell = row.getCell(columnIndex);
@@ -123,7 +114,6 @@ public class ExcelReader {
     }
 
 
-    //경기 출전 선수 명단 가져오기
     public List<Map<String, String>> readRostersByGame(String filePath) throws Exception {
 
         Map<String, Integer> columnIndexMap = new HashMap<>();
@@ -141,13 +131,11 @@ public class ExcelReader {
 
         Sheet sheet = workbook.getSheet("Rosters_By_Game");
 
-        // 각 행 순회 (헤더를 건너뜀)
         for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
-            if (row == null) continue; // 행이 비어있는 경우 건너뜀
+            if (row == null) continue;
 
             Map<String, String> rowData = new HashMap<>();
-            // 각 열 순회
             for (String columnName : columnIndexMap.keySet()) {
                 int columnIndex = columnIndexMap.get(columnName);
                 Cell cell = row.getCell(columnIndex);

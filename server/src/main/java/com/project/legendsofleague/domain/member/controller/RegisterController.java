@@ -12,11 +12,6 @@ public class RegisterController {
 
     private final RegisterService registerService;
 
-//    @GetMapping("/register")
-//    public Member member(){
-//        return null;
-//    }
-
       @PostMapping("/register")
     public void registerProc(@RequestBody RegisterDto dto){
 

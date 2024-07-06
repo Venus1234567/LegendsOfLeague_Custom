@@ -30,16 +30,11 @@ public class JWTUtil {
         try {
             return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
-//            System.out.println("잡음");
             return true;
-//            throw e;
         }
     }
 
     public String createJwt(String username, String role, Long expiredMs) {
-        System.out.println(new Date(System.currentTimeMillis()));
-        System.out.println(new Date(System.currentTimeMillis() + expiredMs));
-
         String token = Jwts.builder()
                 .claim("username", username)
                 .claim("role", role)

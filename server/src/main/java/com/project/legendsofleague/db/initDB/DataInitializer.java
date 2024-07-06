@@ -32,23 +32,19 @@ public class DataInitializer {
     public void initializeDatabase() throws Exception {
         log.info("initializeDatabase");
 
-        //팀 db 저장
         List<Map<String, String>> teams = excelReader.readTeam(filePath);
         log.info("팀 목록={}", teams);
         teamService.saveTeam(teams);
 
-        //선수 db 저장
         List<Map<String, String>> players = excelReader.readPlayer(filePath);
         log.info("선수 명단={}", players);
         playerService.savePlayer(players);
 
-        //경기 db 저장
         List<Map<String, String>> matchSchedules = excelReader.readMatchSchedule(filePath);
         log.info("경기 일정={}", matchSchedules);
         gameService.saveGame(matchSchedules);
         teamInGameService.saveTeamInGame(matchSchedules);
 
-        //경기 출전 명단 db 저장
         List<Map<String, String>> rostersByGames = excelReader.readRostersByGame(filePath);
         log.info("경기 출전 명단={}", rostersByGames);
         playerInGameService.saveRoster(rostersByGames);

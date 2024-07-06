@@ -55,29 +55,23 @@ public class ItemService {
         QItem qItem = QItem.item;
         String keyword = pageRequestDto.getKeyword();
 
-        // 검색어가 없는 경우
         if (StringUtils.isEmpty(keyword)) {
-            // 카테고리가 전체인 경우는 추가적인 조건 없이 반환
             if (StringUtils.isEmpty(category)) {
                 return booleanBuilder;
             }
         }
 
-        // 검색 조건이 있는 경우
         BooleanBuilder conditionBuilder = new BooleanBuilder();
 
-        // 카테고리 조건 추가
         if (!StringUtils.isEmpty(category)) {
             conditionBuilder.and(qItem.category.eq(ItemCategory.valueOf(category)));
         }
 
-        // 키워드 조건 추가
         if (!StringUtils.isEmpty(keyword)) {
             conditionBuilder.and(qItem.name.contains(keyword)
                     .or(qItem.description.contains(keyword)));
         }
 
-        // 모든 조건 통합
         booleanBuilder.and(conditionBuilder);
 
         return booleanBuilder;

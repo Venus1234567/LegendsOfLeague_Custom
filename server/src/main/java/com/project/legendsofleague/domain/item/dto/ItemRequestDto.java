@@ -14,13 +14,13 @@ public class ItemRequestDto {
 
     private Long id;
 
-    private String name; //상품 이름
+    private String name;
 
-    private Integer price; //상품 가격
+    private Integer price;
 
-    private Integer stock; //상품 재고 (남은 수량)
+    private Integer stock;
 
-    private String description; //상품 설명
+    private String description;
 
     private String category;
 

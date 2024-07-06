@@ -29,13 +29,11 @@ public class RateService {
     private final PlayerInGameRepository playerInGameRepository;
     private final RateRepository rateRepository;
 
-    //평점 저장
     @Transactional
     public void saveRate(Member member, RateRequestDto rateRequestDto, Long gameId) {
 
         Game game = gameRepository.findById(gameId).orElseThrow();
 
-        //TODO 예외 처리
         for (RateDto playerScore : rateRequestDto.getPlayerScores()) {
             PlayerInGame playerInGame = playerInGameRepository.findById(playerScore.getPlayerId()).orElseThrow();
             Rate rate;
@@ -49,7 +47,6 @@ public class RateService {
         }
     }
 
-    //사용자가 설정한 평점 + 선수의 평균 평점 모두 가져오기
     public List<RateResponseDto> findRates(Member member, Long gameId) {
         List<RateResponseDto> list = new ArrayList<>();
         Game game = gameRepository.findById(gameId).orElseThrow();
@@ -70,10 +67,8 @@ public class RateService {
                     }
 
                     double average = (double) sum / ratesForAverage.size();
-                    // DecimalFormat 객체 생성
                     DecimalFormat df = new DecimalFormat("#.0");
 
-                    // 소수점 첫째 자리까지만 표시
                     String formattedDouble = df.format(average);
                     rateResponseDto = RateResponseDto.toDto(rate, formattedDouble);
                 list.add(rateResponseDto);

@@ -25,9 +25,9 @@ public class OrderItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private Integer orderPrice; //한 아이템에 대한 가격
+    private Integer orderPrice;
 
-    private Integer count; //한 아이템에 선택한 수량
+    private Integer count;
 
 
     public static OrderItem createOrderItem(Item item, Integer count) {
